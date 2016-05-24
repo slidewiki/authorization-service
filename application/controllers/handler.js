@@ -8,5 +8,7 @@ const boom = require('boom'), //Boom gives us some predefined http codes and pro
   co = require('../common');
 
 module.exports = {
-  
+  sociallogin: (request, reply) => {
+    
+  }
 };

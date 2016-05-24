@@ -1,8 +1,3 @@
-/*
-This is a demo application implementing some interfaces as described in https://docs.google.com/document/d/1337m6i7Y0GPULKLsKpyHR4NRzRwhoxJnAZNnDFCigkc/edit#
-This application demonstrates a service which returns previously inserted data from a MongoDB database.
- */
-
 'use strict';
 
 //This is our webserver framework (instead of express)
