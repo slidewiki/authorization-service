@@ -3,7 +3,6 @@
 [![Language](https://img.shields.io/badge/Language-Javascript%20ECMA2015-lightgrey.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![Framework](https://img.shields.io/badge/Framework-NodeJS%206.1.0-blue.svg)](https://nodejs.org/)
 [![Webserver](https://img.shields.io/badge/Webserver-Hapi%2013.4.0-blue.svg)](http://hapijs.com/)
-[![LinesOfCode](https://img.shields.io/badge/LOC-585-lightgrey.svg)](https://github.com/slidewiki/microservice-template/blob/master/application/package.json)
 
 This service will provide different endpoints.
 One endpoint is for finalizing a social login in terms of using the authorization code to get the tokens.
@@ -11,7 +10,10 @@ Finalizing means also to store the social tokens in a mongodb in order to do use
 This includes also creating a consumer and application in Kong.
 The other endpoints are for managing the user logins.
 
-You want to **checkout this cool service**? Simply start the service and head over to: [http://localhost:3000/documentation](http://localhost:3000/documentation). We're using  [swagger](https://www.npmjs.com/package/hapi-swagger) to have this super cool API discrovery/documentation tool.
+Here an overview where this service will be used:
+![OAuth2 workflow while using a browser](/ressources/images/OAuth_Browser.png)
+
+You want to **checkout this cool service**? Simply start the service and head over to: [http://localhost:3000/documentation](http://localhost:3000/documentation). We're using  [swagger](https://www.npmjs.com/package/hapi-swagger) to have this super cool API discovery/documentation tool.
 
 ### Install NodeJS ###
 ---
