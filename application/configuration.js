@@ -26,6 +26,6 @@ module.exports = {
     PORT: port,
     HOST: host,
     NS: 'local',
-    SLIDEWIKIDATABASE: 'slidewiki'
+    SLIDEWIKIDATABASE: 'slidewikiauthorization'
   }
 };
