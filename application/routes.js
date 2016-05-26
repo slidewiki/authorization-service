@@ -19,4 +19,16 @@ module.exports = function(server) {
       res(JSON.stringify(req.query, null, 2));
     }
   });
+
+  server.route({
+    method: 'GET',
+    path: '/handle_google_callback',
+    handler: function(req, res) {
+      console.log('query', req.query);
+      console.log('auth', req.auth);
+      console.log('headers', req.headers);
+      console.log('payload', req.payload);
+      res(JSON.stringify(req.query, null, 2));
+    }
+  });
 };

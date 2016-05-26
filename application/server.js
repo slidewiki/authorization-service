@@ -15,7 +15,7 @@ let port =  (!co.isEmpty(process.env.APPLICATION_PORT)) ? process.env.APPLICATIO
 server.connection({
   port: port
 });
-let host = (!co.isEmpty(process.env.VIRTUAL_HOST)) ? process.env.VIRTUAL_HOST : server.info.host;
+let host = 'slidewikiauth.spdns.eu'; //(!co.isEmpty(process.env.VIRTUAL_HOST)) ? process.env.VIRTUAL_HOST : server.info.host;
 
 //Export the webserver to be able to use server.log()
 module.exports = server;
@@ -43,19 +43,6 @@ let plugins = [
       }
     }
   },
-  /*
-  { //Plugin for swagger API documentation
-    register: require('hapi-swagger'),
-    options: {
-      host: host,
-      info: {
-        title: 'Example API',
-        description: 'Powered by node, hapi, joi, hapi-swaggered, hapi-swaggered-ui and swagger-ui',
-        version: '0.1.0'
-      }
-    }
-  },*/
-  // REQUIRED:
   {
     register: yar,
     options: {
