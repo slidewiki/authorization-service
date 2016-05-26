@@ -10,13 +10,13 @@ const Joi = require('joi'),
 module.exports = function(server) {
   server.route({
     method: 'GET',
-    path: '/connect/github/callback',
+    path: '/handle_github_callback',
     handler: function(req, res) {
       console.log('query', req.query);
       console.log('auth', req.auth);
       console.log('headers', req.headers);
       console.log('payload', req.payload);
-      res(JSON.stringify(req, null, 2));
+      res(JSON.stringify(req.query, null, 2));
     }
   });
 };
