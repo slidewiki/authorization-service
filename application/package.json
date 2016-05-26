@@ -27,11 +27,13 @@
     "good": "^7.0.0",
     "good-console": "^6.1.1",
     "good-squeeze": "^3.0.1",
+    "grant-hapi": "^3.6.2",
     "hapi": "^13.4.0",
     "hapi-swagger": "^5.1.0",
     "joi": "^8.1.0",
     "mongodb": "^2.1.19",
-    "request": "^2.72.0"
+    "request": "^2.72.0",
+    "yar": "^7.0.2"
   },
   "engines": {
     "node": ">=6.0.0"

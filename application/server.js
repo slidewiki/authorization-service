@@ -3,11 +3,15 @@
 //This is our webserver framework (instead of express)
 const hapi = require('hapi'),
   co = require('./common');
+const yar = require('yar');
+
+const Grant = require('grant-hapi');
+const grant = new Grant();
 
 //Initiate the webserver with standard or given port
 const server = new hapi.Server();
 
-let port = (!co.isEmpty(process.env.APPLICATION_PORT)) ? process.env.APPLICATION_PORT : 3000;
+let port =  (!co.isEmpty(process.env.APPLICATION_PORT)) ? process.env.APPLICATION_PORT : 3000;
 server.connection({
   port: port
 });
@@ -18,8 +22,7 @@ module.exports = server;
 
 //Plugin for sweet server console output
 let plugins = [
-  require('inert'),
-  require('vision'), {
+  {
     register: require('good'),
     options: {
       ops: {
@@ -39,7 +42,9 @@ let plugins = [
         }, 'stdout']
       }
     }
-  }, { //Plugin for swagger API documentation
+  },
+  /*
+  { //Plugin for swagger API documentation
     register: require('hapi-swagger'),
     options: {
       host: host,
@@ -49,6 +54,21 @@ let plugins = [
         version: '0.1.0'
       }
     }
+  },*/
+  // REQUIRED:
+  {
+    register: yar,
+    options: {
+      cookieOptions: {
+        password: '12345678901113151234567890111315',
+        isSecure: false
+      }
+    }
+  },
+  // mount grant
+  {
+    register: grant,
+    options: require('./config.json')
   }
 ];
 
