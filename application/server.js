@@ -20,10 +20,9 @@ let host = 'slidewikiauth.spdns.eu'; //(!co.isEmpty(process.env.VIRTUAL_HOST)) ?
 //Export the webserver to be able to use server.log()
 module.exports = server;
 
-//Plugin for sweet server console output
 let plugins = [
   {
-    register: require('good'),
+    register: require('good'),  //Plugin for sweet server console output
     options: {
       ops: {
         interval: 1000
@@ -44,7 +43,7 @@ let plugins = [
     }
   },
   {
-    register: yar,
+    register: yar,  //For cookie handling - most OAuth2 providers doing a handshake with a unified cookie value to verify the requests
     options: {
       cookieOptions: {
         password: '12345678901113151234567890111315',

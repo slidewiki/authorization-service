@@ -1,6 +1,5 @@
 /*
-These are routes as defined in https://docs.google.com/document/d/1337m6i7Y0GPULKLsKpyHR4NRzRwhoxJnAZNnDFCigkc/edit#
-Each route implementes a basic parameter/payload validation and a swagger API documentation description
+Routes getting the access tokens.
 */
 'use strict';
 
@@ -12,11 +11,10 @@ module.exports = function(server) {
     method: 'GET',
     path: '/handle_github_callback',
     handler: function(req, res) {
-      console.log('query', req.query);
-      console.log('auth', req.auth);
-      console.log('headers', req.headers);
-      console.log('payload', req.payload);
-      res(JSON.stringify(req.query, null, 2));
+      console.log('got token', req.query);
+      //Continue with the token
+      //Remark: third parameter have to be the name of the provider as listet for purest
+      handlers.continueWithToken(req, res, 'github');
     }
   });
 
@@ -24,11 +22,7 @@ module.exports = function(server) {
     method: 'GET',
     path: '/handle_google_callback',
     handler: function(req, res) {
-      console.log('query', req.query);
-      console.log('auth', req.auth);
-      console.log('headers', req.headers);
-      console.log('payload', req.payload);
-      res(JSON.stringify(req.query, null, 2));
+      handlers.continueWithToken(req, res, 'google');
     }
   });
 };
