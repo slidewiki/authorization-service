@@ -11,7 +11,6 @@ module.exports = function(server) {
     method: 'GET',
     path: '/handle_github_callback',
     handler: function(req, res) {
-      console.log('got token', req.query);
       //Continue with the token
       //Remark: third parameter have to be the name of the provider as listet for purest
       handlers.continueWithToken(req, res, 'github');

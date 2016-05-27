@@ -14,29 +14,55 @@ module.exports = {
         provider: provider
       });
 
-      providerInstance.query()
-        .select('user')
-        .auth(token)
-        .headers({
-          'User-Agent': 'SlideWiki'
-        })
-        .request((err, res, body) => {
-          if (err) {
-            console.log(err);
-            reject(err);
-          }
-          console.log(body);
+      switch (provider) {
+        case 'google':
+          providerInstance.get('https://www.googleapis.com/userinfo/v2/me', {
+            auth: {
+              bearer: token
+            },
+            headers: {
+              'User-Agent': 'SlideWiki'
+            }
+          }, function(err, res, body) {
+            if (err) {
+              console.log(err);
+              reject(err);
+            }
+            console.log(body);
 
-          let user = {};
+            let user = {};
 
-          switch(provider) {
-            case 'github':
-              user = getUserFromGithubResponse(body);
-              break;
-          }
+            user = getUserFromGoogleResponse(body);
 
-          resolve(user);
-        });
+            resolve(user);
+          });
+          break;
+        default:
+          providerInstance.query()
+            .select('user')
+            .auth(token)
+            .headers({
+              'User-Agent': 'SlideWiki'
+            })
+            .request((err, res, body) => {
+              if (err) {
+                console.log(err);
+                reject(err);
+              }
+              console.log(body);
+
+              let user = {};
+
+              switch (provider) {
+                case 'github':
+                  user = getUserFromGithubResponse(body);
+                  break;
+              }
+
+              resolve(user);
+            });
+          break;
+      }
     });
 
     return myPromise;
@@ -52,4 +78,20 @@ function getUserFromGithubResponse(body) {
     company: body.company,
     location: body.location
   };
+}
+
+function getUserFromGoogleResponse(body) {
+  let user = {
+    name: body.name,
+    location: body.locale,
+    url: body.link,
+    id: body.id,
+    email: body.email,
+
+  };
+  try {
+    user.nickname = body.email.substring(0, body.email.indexOf('@'));
+  } catch (e) {}
+
+  return user;
 }
