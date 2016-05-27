@@ -76,7 +76,8 @@ function getUserFromGithubResponse(body) {
     url: body.html_url,
     name: body.name,
     company: body.company,
-    location: body.location
+    location: body.location,
+    email: body.email //null at the moment ...
   };
 }
 
