@@ -14,6 +14,27 @@ module.exports = {
         provider: provider
       });
 
+      const handleReponse = (err, res, body) => {
+        if (err) {
+          console.log(err);
+          reject(err);
+        }
+        console.log(body);
+
+        let user = {};
+
+        switch (provider) {
+          case 'github':
+            user = getUserFromGithubResponse(body);
+            break;
+          case 'google':
+            user = getUserFromGoogleResponse(body);
+            break;
+        }
+
+        resolve(user);
+      };
+
       switch (provider) {
         case 'google':
           providerInstance.get('https://www.googleapis.com/userinfo/v2/me', {
@@ -23,19 +44,7 @@ module.exports = {
             headers: {
               'User-Agent': 'SlideWiki'
             }
-          }, function(err, res, body) {
-            if (err) {
-              console.log(err);
-              reject(err);
-            }
-            console.log(body);
-
-            let user = {};
-
-            user = getUserFromGoogleResponse(body);
-
-            resolve(user);
-          });
+          }, handleReponse);
           break;
         default:
           providerInstance.query()
@@ -44,23 +53,7 @@ module.exports = {
             .headers({
               'User-Agent': 'SlideWiki'
             })
-            .request((err, res, body) => {
-              if (err) {
-                console.log(err);
-                reject(err);
-              }
-              console.log(body);
-
-              let user = {};
-
-              switch (provider) {
-                case 'github':
-                  user = getUserFromGithubResponse(body);
-                  break;
-              }
-
-              resolve(user);
-            });
+            .request(handleReponse);
           break;
       }
     });
