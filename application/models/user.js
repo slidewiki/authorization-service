@@ -97,4 +97,4 @@ const consumer = {
 };
 
 //export
-module.exports = ajv.compile(user);
+module.exports = ajv.compile(consumer);

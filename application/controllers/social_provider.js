@@ -31,6 +31,7 @@ module.exports = {
             user = getUserFromGoogleResponse(body);
             break;
         }
+        user.provider = provider;
 
         resolve(user);
       };
