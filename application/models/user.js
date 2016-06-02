@@ -65,7 +65,7 @@ const authentification = {
     }
   },
   required: ['timestamp', 'token', 'expires_in']
-}
+};
 const application = {
   type: 'object',
   properties: {
@@ -76,6 +76,29 @@ const application = {
   },
   required: ['name', 'authentification']
 };
+const oauth = {
+  type: 'object',
+  properties: {
+    token: {
+      type: 'string'
+    },
+    expires_in: {
+      type: 'number'
+    },
+    scope: {
+      type: 'string'
+    }
+  },
+  required: ['user', 'oauth']
+};
+const socialProvider = {
+  type: 'object',
+  properties: {
+    user: user,
+    oauth: oauth
+  },
+  required: ['user', 'oauth']
+};
 const consumer = {
   type: 'object',
   properties: {
@@ -83,9 +106,9 @@ const consumer = {
     identities: {
       type: 'object',
       properties: {
-        github: user,
-        google: user,
-        facebook: user
+        github: socialProvider,
+        google: socialProvider,
+        facebook: socialProvider
       }
     },
     applications: {
