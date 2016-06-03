@@ -8,7 +8,7 @@ const EXPIRE_TIME = 7200,
 
 module.exports = {
   getUserId: (user, authorizationQuery, provider) => {
-    console.log('getUserId: we got:', user, authorizationQuery, provider);
+    //console.log('getUserId: we got:', user, authorizationQuery, provider);
     return SearchUser(user, provider)
       .then((doc) => {
         if (doc === null) {
@@ -47,7 +47,7 @@ function AddUser(user, authorizationQuery, provider) {
     .then((dbconn) => dbconn.collection(STD_COLLECTION))
     .then((collection) => {
       const newConsumer = createConsumerInstance(user, authorizationQuery, provider);
-      console.log('Add new consumer: ', newConsumer);
+      //console.log('Add new consumer: ', newConsumer);
       return collection.insertOne(newConsumer)
         .then((result) => {
           return (result.insertedCount === 1) ? result.insertedId : null;

@@ -58,7 +58,7 @@ describe('User Management', () => {
         promise.should.eventually.have.property('identities').that.is.not.empty,
         promise.should.eventually.have.deep.property('identities.google.user').that.has.all.keys('id', 'email', 'name', 'nickname', 'url', 'location', 'provider'),
         promise.should.eventually.have.property('applications').that.is.not.empty,
-        promise.should.eventually.have.deep.property('applications[0].authentification').that.has.all.keys('timestamp', 'token', 'expires_in', 'scopes'),
+        promise.should.eventually.have.deep.property('applications[0]').that.has.all.keys('name', 'authentification'),
       ]);
     });
   });
