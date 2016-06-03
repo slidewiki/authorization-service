@@ -16,10 +16,10 @@ module.exports = {
 
       const handleReponse = (err, res, body) => {
         if (err) {
-          console.log(err);
+          console.log('getUserCredentials: request error: ', err);
           reject(err);
         }
-        console.log(body);
+        console.log('getUserCredentials: body: ', body);
 
         let user = {};
 

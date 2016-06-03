@@ -57,6 +57,9 @@ const authentification = {
     expires_in: {
       type: 'number'
     },
+    redirectURI: {
+      type: 'string'
+    },
     scopes: {
       type: 'array',
       items: {
@@ -89,7 +92,7 @@ const oauth = {
       type: 'string'
     }
   },
-  required: ['user', 'oauth']
+  required: ['token', 'expires_in']
 };
 const socialProvider = {
   type: 'object',
