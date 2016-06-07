@@ -8,7 +8,7 @@ It has functions to create a costumer and a application and also to retrieve a a
 const request = require('request');
 
 const KONG_ADMIN = 'http://localhost:8001/',
-  KONG_OAUTH2 = 'http://testservice.localhost/oauth2/token';
+  KONG_OAUTH2 = 'http://oauth2test.localhost/oauth2/token';
 
 module.exports = {
   //returns {"created_at":,"id":""}
@@ -17,6 +17,7 @@ module.exports = {
       const options = {
         url: KONG_ADMIN + 'consumers/',
         method: 'PUT',
+        json: true,
         body: {
           custom_id: consumerId
         }
@@ -24,7 +25,7 @@ module.exports = {
 
       function callback(error, response, body) {
         if (!error && (response.statusCode === 201 || response.statusCode === 200)) {
-          let consumer = JSON.parse(body);
+          let consumer = body;
           resolve(consumer);
         } else {
           reject(error);
@@ -41,6 +42,7 @@ module.exports = {
       const options = {
         url: KONG_ADMIN + 'consumers/' + consumerKongId + '/oauth2',
         method: 'POST',
+        json: true,
         body: {
           name: applicationName,
           redirect_uri: redirectURI
@@ -49,7 +51,7 @@ module.exports = {
 
       function callback(error, response, body) {
         if (!error && response.statusCode === 201) {
-          let application = JSON.parse(body);
+          let application = body;
           if (consumerKongId !== application.consumer_id)
             reject('created Application for wrong consumer');
           resolve(application);
@@ -66,11 +68,14 @@ module.exports = {
   getAccessToken: (clientId, clientSecret, scope) => {
     let promise = new Promise((resolve, reject) => {
       const options = {
-        url: KONG_OAUTH2 + '?grant_type=client_credentials&client_id=' + clientId + '&client_secret=' + clientSecret + '&scope=' + scope,
+        url: KONG_OAUTH2 + '?grant_type=client_credentials&client_id=' + clientId + '&client_secret=' + clientSecret + (scope ? '&scope=' + scope : ''),
         method: 'GET'
       };
 
       function callback(error, response, body) {
+        console.log('we have send: ', options);
+        console.log('we got: ', error, body);
+
         if (!error && response.statusCode === 201) {
           let authorization = JSON.parse(body);
           resolve(authorization);
@@ -92,6 +97,7 @@ module.exports = {
       const options = {
         url: KONG_ADMIN + 'apis/',
         method: 'POST',
+        json: true,
         body: {
           name: hostname,
           request_host: requestHost,
@@ -101,7 +107,7 @@ module.exports = {
 
       function callback(error, response, body) {
         if (!error && response.statusCode === 201) {
-          let api = JSON.parse(body);
+          let api = body;
           if (api.name !== hostname)
             reject('created Application for wrong consumer');
           resolve(api);
@@ -123,9 +129,9 @@ module.exports = {
         method: 'DELETE'
       };
 
-      function callback(error, response, body) {
+      function callback(error, response) {
         if (!error && response.statusCode === 204) {
-          resolve(api);
+          resolve(response);
         } else {
           reject(error);
         }
@@ -146,7 +152,7 @@ module.exports = {
     "config": {
       "mandatory_scope": false,
       "token_expiration": 7200,
-      "enable_implicit_grant": false,
+      "enable_implicit_grant": true,
       "hide_credentials": false,
       "provision_key": "",
       "accept_http_if_already_terminated": false,
@@ -156,11 +162,12 @@ module.exports = {
     }
   }
   */
-  initializePluginOAuth2: (hostname, scopes) => {
+  initializePluginOAuth2: (hostname, scopes) => { //hostname could also be the kong id
     let promise = new Promise((resolve, reject) => {
       const options = {
         url: KONG_ADMIN + 'apis/' + hostname + '/plugins',
         method: 'POST',
+        json: true,
         body: {
           name: 'oauth2',
           'config.scopes': scopes,
@@ -170,7 +177,7 @@ module.exports = {
 
       function callback(error, response, body) {
         if (!error && response.statusCode === 201) {
-          let plugin = JSON.parse(body);
+          let plugin = body;
           if (!plugin.enabled)
             reject('Failed creating plugin');
           resolve(plugin);
@@ -202,6 +209,7 @@ module.exports = {
       const options = {
         url: KONG_ADMIN + 'apis/' + hostname + '/plugins',
         method: 'POST',
+        json: true,
         body: {
           name: 'acl',
           'config.whitelist': whitelist,
@@ -211,7 +219,7 @@ module.exports = {
 
       function callback(error, response, body) {
         if (!error && response.statusCode === 201) {
-          let plugin = JSON.parse(body);
+          let plugin = body;
           if (!plugin.enabled)
             reject('Failed creating plugin');
           resolve(plugin);
