@@ -36,7 +36,7 @@ describe('Kong', () => {
             return;
           });
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
         expect(1).to.equal(null);
         return;
@@ -59,7 +59,7 @@ describe('Kong', () => {
       .then(() => {
         return;
       })
-      .catch(function() {
+      .catch(function () {
         expect(1).to.equal(null);
         return;
       });
@@ -100,17 +100,15 @@ describe('Kong', () => {
       });
     });
 
-
-
     it('should be possible to retrieve an access token', () => {
       let promise = controller.getAccessToken(standardApplication.client_id, standardApplication.client_secret, undefined);
       return promise.then((grant) => {
         expect(grant).to.not.equal(null);
         expect(grant.token_type).to.not.equal(undefined);
-        expect(grant.access_token).to.equal(undefined);
+        expect(grant.access_token).to.not.equal(undefined);
         expect(grant.expires_in).to.not.equal(undefined);
 
-        console.log('We got the access grant: ', grant);
+        //console.log('We got the access grant: ', grant);
 
         return;
       });

@@ -5,10 +5,11 @@ It has functions to create a costumer and a application and also to retrieve a a
 
 'use strict';
 
-const request = require('request');
+const request = require('request'),
+  https = require('https');
 
 const KONG_ADMIN = 'http://localhost:8001/',
-  KONG_OAUTH2 = 'http://oauth2test.localhost/oauth2/token';
+  KONG_OAUTH2 = 'https://oauth2test.localhost/oauth2/token';
 
 module.exports = {
   //returns {"created_at":,"id":""}
@@ -68,15 +69,19 @@ module.exports = {
   getAccessToken: (clientId, clientSecret, scope) => {
     let promise = new Promise((resolve, reject) => {
       const options = {
-        url: KONG_OAUTH2 + '?grant_type=client_credentials&client_id=' + clientId + '&client_secret=' + clientSecret + (scope ? '&scope=' + scope : ''),
-        method: 'GET'
+        url: KONG_OAUTH2,
+        method: 'POST',
+        body: 'grant_type=client_credentials&client_id=' + clientId + '&client_secret=' + clientSecret + (scope ? '&scope=' + scope : ''),
+        agentOptions: {
+          rejectUnauthorized: false //Kong has an own certificate
+        }
       };
 
       function callback(error, response, body) {
-        console.log('we have send: ', options);
-        console.log('we got: ', error, body);
+        //console.log('we have send: ', options);
+        //console.log('we got: ', error, response.statusCode, body);
 
-        if (!error && response.statusCode === 201) {
+        if (!error && response.statusCode === 200) {
           let authorization = JSON.parse(body);
           resolve(authorization);
         } else {
