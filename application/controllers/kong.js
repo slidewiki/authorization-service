@@ -5,8 +5,7 @@ It has functions to create a costumer and a application and also to retrieve a a
 
 'use strict';
 
-const request = require('request'),
-  https = require('https');
+const request = require('request');
 
 const KONG_ADMIN = 'http://localhost:8001/',
   KONG_OAUTH2 = 'https://oauth2test.localhost/oauth2/token';
@@ -27,6 +26,48 @@ module.exports = {
       function callback(error, response, body) {
         if (!error && (response.statusCode === 201 || response.statusCode === 200)) {
           let consumer = body;
+          resolve(consumer);
+        } else {
+          reject(error);
+        }
+      }
+
+      request(options, callback);
+    });
+    return promise;
+  },
+  //returns {id:, created_at: , custom_id: }
+  getConsumerByMongoDBId: (consumerId) => {
+    let promise = new Promise((resolve, reject) => {
+      const options = {
+        url: KONG_ADMIN + 'consumers/',
+        method: 'GET',
+        json: true,
+        body: {
+          custom_id: consumerId
+        }
+      };
+
+      function callback(error, response, body) {
+        //console.log('we have send: ', options);
+        //console.log('we got: ', error, response.statusCode, body);
+
+        if (!error && (response.statusCode === 201 || response.statusCode === 200)) {
+          const consumers = body.data;
+
+          //it could happen that there are different consumers with the same costum_id - get the newest one
+          const consumer = consumers.reduce(
+            (prev, curr) => {
+              if (prev === null)
+                return curr;
+
+              if (prev.created_at < curr.created_at)
+                return curr;
+
+              return prev;
+            }, null
+          );
+
           resolve(consumer);
         } else {
           reject(error);
@@ -64,6 +105,58 @@ module.exports = {
       request(options, callback);
     });
     return promise;
+  },
+  //returns {{"consumer_id":"","client_id":"","id":"","created_at":,"name":"standard","redirect_uri":"","client_secret":""}
+  getStandardApplicationOfConsumer: (consumerKongId) => {
+    let promise = new Promise((resolve, reject) => {
+      const options = {
+        url: KONG_ADMIN + 'consumers/' + consumerKongId + '/oauth2',
+        method: 'GET',
+        json: true
+      };
+
+      function callback(error, response, body) {
+        //console.log('we have send: ', options);
+        //console.log('we got: ', error, response.statusCode, body);
+
+        if (response.statusCode === 404 && body.message === 'Not found') {
+          resolve (null);
+          return;
+        }
+
+        if (!error && (response.statusCode === 201 || response.statusCode === 200)) {
+          const applications = body;
+
+          if (applications.total < 1) {
+            resolve(null);
+            return;
+          }
+
+          const application = applications.data.find((app) => {
+            if (app.name = 'standard')
+              return true;
+            return false;
+          });
+
+          resolve(application);
+        } else {
+          reject(error);
+        }
+      }
+
+      request(options, callback);
+    });
+    return promise;
+  },
+  //returns {{"consumer_id":"","client_id":"","id":"","created_at":,"name":"standard","redirect_uri":"","client_secret":""}
+  getStandardApplicationByMongoDBId: (consumerId) => {
+    return module.exports.getConsumerByMongoDBId(consumerId)
+      .then((consumer) => {
+        if (consumer === null)
+          return null;
+
+        return module.exports.getStandardApplicationOfConsumer(consumer.id);
+      });
   },
   //returns {"token_type":"bearer","access_token":"","expires_in":}
   getAccessToken: (clientId, clientSecret, scope) => {

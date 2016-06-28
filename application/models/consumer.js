@@ -69,15 +69,40 @@ const authentification = {
   },
   required: ['timestamp', 'token', 'expires_in']
 };
+const kong_application = {
+  type: 'object',
+  properties: {
+    consumer_id: {
+      type: 'string'
+    },
+    client_id: {
+      type: 'string'
+    },
+    id: {
+      type: 'string'
+    },
+    created_at: {
+      type: 'number'
+    },
+    redirect_uri: {
+      type: 'string'
+    },
+    client_secret: {
+      type: 'string'
+    }
+  },
+  required: ['consumer_id', 'client_id', 'id', 'created_at', 'redirect_uri', 'client_secret']
+};
 const application = {
   type: 'object',
   properties: {
     name: {
       type: 'string'
     },
-    authentification: authentification
+    authentification: authentification,
+    kong: kong_application
   },
-  required: ['name', 'authentification']
+  required: ['name', 'authentification', 'kong']
 };
 const oauth = {
   type: 'object',

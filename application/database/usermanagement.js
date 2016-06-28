@@ -7,32 +7,39 @@ const EXPIRE_TIME = 7200,
   STD_COLLECTION = 'consumer';
 
 module.exports = {
-  getUserId: (user, authorizationQuery, provider) => {
-    //console.log('getUserId: we got:', user, authorizationQuery, provider);
-    return SearchUser(user, provider)
+  getConsumerId: (user, authorizationQuery, provider) => {
+    //console.log('getConsumerId: we got:', user, authorizationQuery, provider);
+    return module.exports.getConsumer(user, authorizationQuery, provider).then((consumer) => {
+      if (consumer !== null) {
+        return consumer._id;
+      }
+      return null;
+    });
+  },
+
+  getConsumer: (user, authorizationQuery, provider) => {
+    //console.log('getConsumer: we got:', user, authorizationQuery, provider);
+    return SearchConsumerByProvider(user, provider)
       .then((doc) => {
         if (doc === null) {
-          return AddUser(user, authorizationQuery, provider)
-            .then((newId) => {
-              if (newId === null) {
-                return;
-              }
-              return newId;
+          return AddConsumer(user, authorizationQuery, provider)
+            .then((newConsumer) => {
+              return newConsumer;
             });
         } else { //TODO update social provider data
-          return doc._id;
+          return doc;
         }
       });
   },
 
   //testing
-  testing_SearchUser: SearchUser,
-  testing_AddUser: AddUser,
+  testing_SearchConsumerByProvider: SearchConsumerByProvider,
+  testing_AddConsumer: AddConsumer,
   testing_createConsumerInstance: createConsumerInstance,
-  testing_UpdateUser: UpdateUser
+  testing_UpdateConsumer: UpdateConsumer
 };
 
-function SearchUser(user, provider) {
+function SearchConsumerByProvider(user, provider) {
   return dbHelper.connectToDatabase()
     .then((dbconn) => dbconn.collection(STD_COLLECTION))
     .then((collection) => {
@@ -42,7 +49,18 @@ function SearchUser(user, provider) {
     });
 }
 
-function AddUser(user, authorizationQuery, provider) {
+function SearchConsumerByMongoDBId(id) {
+  return dbHelper.connectToDatabase()
+    .then((dbconn) => dbconn.collection(STD_COLLECTION))
+    .then((collection) => {
+      let query = {
+        _id: id
+      };
+      return collection.findOne(query);
+    });
+}
+
+function AddConsumer(user, authorizationQuery, provider) {
   return dbHelper.connectToDatabase()
     .then((dbconn) => dbconn.collection(STD_COLLECTION))
     .then((collection) => {
@@ -50,12 +68,17 @@ function AddUser(user, authorizationQuery, provider) {
       //console.log('Add new consumer: ', newConsumer);
       return collection.insertOne(newConsumer)
         .then((result) => {
-          return (result.insertedCount === 1) ? result.insertedId : null;
+          if (result.insertedCount === 1) {
+            newConsumer._id = result.insertedId;
+            return newConsumer;
+          }
+
+          return null;
         });
     });
 }
 
-function UpdateUser(user, authorization, provider) {
+function UpdateConsumer(user, authorization, provider) {
 
 }
 
@@ -64,7 +87,8 @@ function createConsumerInstance(user, authorizationQuery, provider) {
     identities: {},
     applications: [{
       name: 'standard',
-      authentification: {}
+      authentification: {},
+      kong: {}
     }]
   };
   consumer.identities[provider] = {

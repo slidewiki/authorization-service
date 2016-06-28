@@ -86,6 +86,27 @@ describe('Kong', () => {
       });
     });
 
+    it('should find the consumer by the MongoDB Id', () => {
+      let promise = controller.getConsumerByMongoDBId(consumerId);
+      return promise.then((consumer) => {
+        expect(consumer).to.not.equal(null);
+        expect(consumer.id).to.equal(consumerKongId);
+        expect(consumer.custom_id).to.equal(consumerId);
+        expect(consumer.created_at).to.not.equal(undefined);
+
+        return;
+      });
+    });
+
+    it('shouldn\'t find another consumer', () => {
+      let promise = controller.getConsumerByMongoDBId('553456785101253145516578');
+      return promise.then((consumer) => {
+        expect(consumer).to.equal(null);
+
+        return;
+      });
+    });
+
     it('should be possible to add an application for the consumer', () => {
       let promise = controller.createApplication(consumerKongId, applicationName, applicationRedirectURI);
       return promise.then((application) => {
@@ -95,6 +116,27 @@ describe('Kong', () => {
         expect(application.created_at).to.not.equal(undefined);
 
         standardApplication = application;
+
+        return;
+      });
+    });
+
+    it('should find the already added application', () => {
+      let promise = controller.getStandardApplicationOfConsumer(consumerKongId);
+      return promise.then((application) => {
+        expect(application).to.not.equal(null);
+        expect(application.consumer_id).to.equal(consumerKongId);
+        expect(application.client_id).to.not.equal(undefined);
+        expect(application.name).to.equal('standard');
+
+        return;
+      });
+    });
+
+    it('shouldn\'t find a application of a non existing consumer', () => {
+      let promise = controller.getStandardApplicationOfConsumer('4959c1c4-3929-4f8e-bd14-50745c5ff5ec');
+      return promise.then((application) => {
+        expect(application).to.equal(null);
 
         return;
       });
