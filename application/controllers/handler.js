@@ -19,7 +19,18 @@ module.exports = {
             if (consumer === undefined || consumer === null)
               throw Error('unable to get mongodb id with user');
 
-              
+            if (consumer.applications === undefined || consumer.applications === undefined || consumer.applications.length < 1) {
+              throw Error('data error');
+            }
+
+            let standardApplication = consumer.applications.find((app) => {
+              if (app.name === 'standard')
+                return true;
+
+              return false;
+            });
+
+            
           });
       })
       .catch((error) => {

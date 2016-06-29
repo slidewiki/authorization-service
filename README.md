@@ -13,6 +13,24 @@ The other endpoints are for managing the user logins.
 Here an overview where this service will be used:
 ![OAuth2 workflow while using a browser](/ressources/images/OAuth_Browser.png)
 
+API:
+
+connect
+
+&nbsp;&nbsp;&nbsp;        GET /github
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;            OAuth2 with Github
+
+&nbsp;&nbsp;&nbsp;        GET /google
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;            OAuth2 with Google
+
+user
+
+&nbsp;&nbsp;&nbsp;        PUT /getToken
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;            Get access token for user
+
 You want to **checkout this cool service**? Simply start the service and head over to: [http://localhost:3000/documentation](http://localhost:3000/documentation). We're using  [swagger](https://www.npmjs.com/package/hapi-swagger) to have this super cool API discovery/documentation tool.
 
 ### Install NodeJS ###
