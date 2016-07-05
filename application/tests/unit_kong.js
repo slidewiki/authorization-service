@@ -5,7 +5,7 @@
 
 describe('Kong', () => {
 
-  let controller, expect, request;
+  let controller, expect;
 
   const hostname = 'unit_oauth2_test',
     requestHost = 'oauth2test.localhost',
@@ -36,7 +36,7 @@ describe('Kong', () => {
             return;
           });
       })
-      .catch(function (error) {
+      .catch((error) => {
         console.log(error);
         expect(1).to.equal(null);
         return;
@@ -59,7 +59,7 @@ describe('Kong', () => {
       .then(() => {
         return;
       })
-      .catch(function () {
+      .catch(() => {
         expect(1).to.equal(null);
         return;
       });

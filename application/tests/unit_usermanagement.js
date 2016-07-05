@@ -80,10 +80,10 @@ describe('User Management', () => {
           const the_right_id = consumer._id.toString();
           temp__id = the_right_id;
           return controller.getConsumerId(dummyUser, {
-              access_token: example_token,
-              'raw[expires_in]': 3600,
-              'raw[scope]': 'user'
-            }, 'google')
+            access_token: example_token,
+            'raw[expires_in]': 3600,
+            'raw[scope]': 'user'
+          }, 'google')
             .then((result) => {
               expect(result).to.not.equal(null);
               expect(result.toString()).to.equal(the_right_id);
@@ -96,10 +96,10 @@ describe('User Management', () => {
       dummyUser.id = '98798different987n97n89';
       dummyUser.url = 'https://plus.google.com/98798different987n97n89';
       return controller.getConsumerId(dummyUser, {
-          access_token: example_token,
-          'raw[expires_in]': 3600,
-          'raw[scope]': 'user'
-        }, 'google')
+        access_token: example_token,
+        'raw[expires_in]': 3600,
+        'raw[scope]': 'user'
+      }, 'google')
         .then((result) => {
           expect(result).to.not.equal(null);
           expect(result.toString()).to.not.equal(temp__id);

@@ -1,6 +1,6 @@
 'use strict';
 
-const request = require('request'),
+const //request = require('request'),
   Purest = require('purest');
 
 module.exports = {
@@ -9,7 +9,7 @@ module.exports = {
   getUserCredentials: function(token, provider) {
     console.log('Lets do API access with our token', token, provider);
 
-    let myPromise = new Promise(function(resolve, reject) {
+    let myPromise = new Promise((resolve, reject) => {
       let providerInstance = new Purest({
         provider: provider
       });

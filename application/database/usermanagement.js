@@ -3,8 +3,7 @@
 const mongodb = require('mongodb'),
   dbHelper = require('./helper');
 
-const EXPIRE_TIME = 7200,
-  STD_COLLECTION = 'consumer';
+const STD_COLLECTION = 'consumer';
 
 module.exports = {
   getConsumerId: (user, authorizationQuery, provider) => {
