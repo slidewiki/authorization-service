@@ -72,7 +72,7 @@ const authentification = {
 const kong_application = {
   type: 'object',
   properties: {
-    consumer_id: {  //same as _id of user collection
+    consumer_id: {
       type: 'string'
     },
     client_id: {

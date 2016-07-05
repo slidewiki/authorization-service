@@ -78,7 +78,7 @@ module.exports = {
     });
     return promise;
   },
-  //returns {"consumer_id":"","client_id":"","created_at":,"redirect_uri":"","name":"","client_secret":""}
+  //returns {"consumer_id":"","client_id":"", id:"","created_at":,"redirect_uri":"","name":"","client_secret":""}
   createApplication: (consumerKongId, applicationName, redirectURI) => {
     let promise = new Promise((resolve, reject) => {
       const options = {

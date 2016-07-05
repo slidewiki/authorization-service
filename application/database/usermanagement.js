@@ -102,13 +102,13 @@ function createConsumerInstance(user, authorizationQuery, provider) {
     identities: {},
     applications: [{
       name: 'standard',
-      authentification: {},
-      kong: {}
+      authentification: null,
+      kong: null
     }]
     //,userid: ''
   };
   consumer.identities[provider] = {
-    user: user,
+    user: user, //TODO: enrich location/language attribute
     oauth: parseOAuthResponse(authorizationQuery)
   };
 
