@@ -15,7 +15,7 @@ for (let i in lines) {
 
 //read mongo port from ENV
 const co = require('./common');
-let port = 27017;
+let port = 27018;
 if (!co.isEmpty(process.env.DATABASE_PORT)){
   port = process.env.DATABASE_PORT;
   //console.log('Using port ' + port + ' as database port.'); TODO replace it with logging, that isn't printed at npm run test:unit

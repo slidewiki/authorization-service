@@ -11,7 +11,7 @@ module.exports = {
     //console.log('getConsumerId: we got:', user, authorizationQuery, provider);
     return module.exports.getConsumer(user, authorizationQuery, provider).then((consumer) => {
       if (consumer !== null) {
-        return consumer._id;
+        return consumer._id.toString();
       }
       return null;
     });
@@ -32,11 +32,13 @@ module.exports = {
       });
   },
 
+  ReplaceConsumer: ReplaceConsumer,
+
   //testing
   testing_SearchConsumerByProvider: SearchConsumerByProvider,
   testing_AddConsumer: AddConsumer,
   testing_createConsumerInstance: createConsumerInstance,
-  testing_UpdateConsumer: UpdateConsumer
+  testing_ReplaceConsumer: ReplaceConsumer
 };
 
 function SearchConsumerByProvider(user, provider) {
@@ -54,7 +56,7 @@ function SearchConsumerByMongoDBId(id) {
     .then((dbconn) => dbconn.collection(STD_COLLECTION))
     .then((collection) => {
       let query = {
-        _id: id
+        _id: mongodb.ObjectID.createFromHexString(id)
       };
       return collection.findOne(query);
     });
@@ -78,8 +80,21 @@ function AddConsumer(user, authorizationQuery, provider) {
     });
 }
 
-function UpdateConsumer(user, authorization, provider) {
+function ReplaceConsumer(consumer) {
+  return dbHelper.connectToDatabase()
+    .then((dbconn) => dbconn.collection(STD_COLLECTION))
+    .then((collection) => {
+      const _id = mongodb.ObjectID.createFromHexString(consumer._id);
+      consumer._id = _id;
+      return collection.replaceOne({_id: _id}, consumer)
+        .then((result) => {
+          if (result.modifiedCount === 1) {
+            return _id.toString();
+          }
 
+          return null;
+        });
+    });
 }
 
 function createConsumerInstance(user, authorizationQuery, provider) {
@@ -90,6 +105,7 @@ function createConsumerInstance(user, authorizationQuery, provider) {
       authentification: {},
       kong: {}
     }]
+    //,userid: ''
   };
   consumer.identities[provider] = {
     user: user,
@@ -101,7 +117,8 @@ function createConsumerInstance(user, authorizationQuery, provider) {
 
 function parseOAuthResponse(authorizationQuery) {
   let oauth = {
-    token: authorizationQuery.access_token
+    token: authorizationQuery.access_token,
+    expires_in: 0
   };
   if (authorizationQuery['raw[expires_in]'] !== undefined) {
     oauth.expires_in = authorizationQuery['raw[expires_in]'];

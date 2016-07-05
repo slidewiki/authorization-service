@@ -34,6 +34,15 @@ describe('User Management', () => {
     location: 'de',
     provider: 'google'
   };
+  const dummyUser2 = {
+    id: '1',
+    email: 'a@b.cd',
+    name: 'Dummy User 2',
+    nickname: 'DAU2',
+    url: 'https://plus.google.com/1',
+    location: 'en',
+    provider: 'hotmail'
+  };
   const example_token = 'ya29.CjL1AqRR4INLLzbJ4FpIMNxspvVEeJ8o6tUAHLPYF73ZrnYKn_iG7pZLlBVwIVLKkECj5A';
 
   let temp__id = '';
@@ -99,4 +108,15 @@ describe('User Management', () => {
     });
   });
 
+
+  context('when having stored consumers', () => {
+    it('we should be able to update them', () => {
+      dummyUser2._id = temp__id;
+      return controller.testing_ReplaceConsumer(dummyUser2)
+        .then((oldId) => {
+          expect(oldId).to.equal(temp__id);
+          return;
+        });
+    });
+  });
 });

@@ -72,7 +72,7 @@ const authentification = {
 const kong_application = {
   type: 'object',
   properties: {
-    consumer_id: {
+    consumer_id: {  //same as _id of user collection
       type: 'string'
     },
     client_id: {
@@ -142,9 +142,10 @@ const consumer = {
     applications: {
       type: 'array',
       items: application
-    }
+    },
+    user_id: objectid
   },
-  required: ['_id', 'identities']
+  required: ['_id', 'identities', 'applications']
 };
 
 //export
