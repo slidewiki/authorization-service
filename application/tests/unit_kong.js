@@ -14,7 +14,6 @@ describe('Kong', () => {
   let hostId = '';
 
   before(() => {
-    request = require('request');
     Object.keys(require.cache).forEach((key) => delete require.cache[key]);
     require('chai').should();
     let chai = require('chai');
@@ -36,7 +35,7 @@ describe('Kong', () => {
             return;
           });
       })
-      .catch((error) => {
+      .catch(function (error) {
         console.log(error);
         expect(1).to.equal(null);
         return;
@@ -59,7 +58,7 @@ describe('Kong', () => {
       .then(() => {
         return;
       })
-      .catch(() => {
+      .catch(function () {
         expect(1).to.equal(null);
         return;
       });
