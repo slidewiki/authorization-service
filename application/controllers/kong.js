@@ -24,6 +24,8 @@ module.exports = {
       };
 
       function callback(error, response, body) {
+        //console.log('Kong: createConsumer got: ', error, response.statusCode, body);
+
         if (!error && (response.statusCode === 201 || response.statusCode === 200)) {
           let consumer = body;
           resolve(consumer);
@@ -31,6 +33,8 @@ module.exports = {
           reject(error);
         }
       }
+
+      //console.log('Kong: createConsumer: ', options);
 
       request(options, callback);
     });
@@ -171,8 +175,8 @@ module.exports = {
       };
 
       function callback(error, response, body) {
-        //console.log('we have send: ', options);
-        //console.log('we got: ', error, response.statusCode, body);
+        console.log('Kong: getAccessToken: ', options);
+        console.log('Kong: getAccessToken: got ', error, response.statusCode, body);
 
         if (!error && response.statusCode === 200) {
           let authorization = JSON.parse(body);
@@ -204,6 +208,9 @@ module.exports = {
       };
 
       function callback(error, response, body) {
+        //console.log('Kong: addUpstreamHost: ', options);
+        //console.log('Kong: addUpstreamHost: got ', error, response.statusCode, body);
+
         if (!error && response.statusCode === 201) {
           let api = body;
           if (api.name !== hostname)
@@ -227,7 +234,10 @@ module.exports = {
         method: 'DELETE'
       };
 
-      function callback(error, response) {
+      function callback(error, response, body) {
+        //console.log('Kong: deleteUpstreamHost: ', options);
+        //console.log('Kong: deleteUpstreamHost: got ', error, response.statusCode, body);
+
         if (!error && response.statusCode === 204) {
           resolve(response);
         } else {

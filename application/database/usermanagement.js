@@ -80,10 +80,11 @@ function AddConsumer(user, authorizationQuery, provider) {
 }
 
 function ReplaceConsumer(consumer) {
+  console.log('usermanagement: ReplaceConsumer: ', consumer);
   return dbHelper.connectToDatabase()
     .then((dbconn) => dbconn.collection(STD_COLLECTION))
     .then((collection) => {
-      const _id = mongodb.ObjectID.createFromHexString(consumer._id);
+      const _id = new mongodb.ObjectID(consumer._id.toString());
       consumer._id = _id;
       return collection.replaceOne({_id: _id}, consumer)
         .then((result) => {
@@ -110,6 +111,9 @@ function createConsumerInstance(user, authorizationQuery, provider) {
     user: user, //TODO: enrich location/language attribute
     oauth: parseOAuthResponse(authorizationQuery)
   };
+  if (consumer.identities[provider].user.email === null || consumer.identities[provider].user.email === '') {
+    consumer.identities[provider].user.email = consumer.identities[provider].user.nickname + '@' + provider + '.com';
+  }
 
   return consumer;
 }
