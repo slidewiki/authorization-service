@@ -20,7 +20,9 @@
     "countLOC:details": "sloc -f cli-table -d -e node_modules\\|coverage ./",
     "start:watch": "nodemon",
     "start:mongodb": "docker run -d --name mongotest -p 27018:27017 mongo",
-    "stop:mongodb": "docker stop mongotest && docker rm mongotest"
+    "stop:mongodb": "docker stop mongotest && docker rm mongotest",
+    "start:kong": "docker-compose -f ../kong/docker-compose.yml up -d",
+    "stop:kong": "docker-compose -f ../kong/docker-compose.yml stop"
   },
   "dependencies": {
     "ajv": "^4.1.0",
@@ -50,6 +52,7 @@
     "istanbul": "^0.4.3",
     "mocha": "^2.4.5",
     "nodemon": "^1.9.2",
+    "pre-commit": "^1.1.3",
     "sloc": "^0.1.10"
   },
   "pre-commit": [

@@ -1,4 +1,4 @@
-FROM node:6.1-slim
+FROM node:6.2-slim
 MAINTAINER Kurt Junghanns <kjunghanns@informatik.uni-leipzig.de>
 
 RUN mkdir /nodeApp
