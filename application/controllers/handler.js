@@ -136,7 +136,7 @@ function firstPath(consumer, standardApplication, res) {
   let outdatedDate = new Date(standardApplication.authentification.timestamp);
   outdatedDate = new Date(outdatedDate.getTime() + (1000 * standardApplication.authentification.expires_in));
 
-  if (now.getTime() + TIME_BUFFER_EXPIRATION < outdatedDate.getTime()) {
+  if ((now + TIME_BUFFER_EXPIRATION) < outdatedDate.getTime()) {
     console.log('Token is valid and could be used: ', standardApplication.authentification);
     let result = standardApplication.authentification;
     result.userid = consumer.user_id; //MongoDB ID
@@ -188,48 +188,3 @@ function secondPath(consumer, provider, res) {
         });
     });
 }
-
-/*
-{
-  "old_user": {
-    "nickname": "TBoonX",
-    "id": 3153545,
-    "url": "https://github.com/TBoonX",
-    "name": "Kurt Junghanns",
-    "company": "Institut für Angewandte Informatik e. V.",
-    "location": "Deutschland",
-    "email": null,
-    "provider": "github"
-  },
-  "db_user": {
-    "_id": "575168f669f5078b0e90f8c2",
-    "identities": {
-      "github": {
-        "user": {
-          "nickname": "TBoonX",
-          "id": 3153545,
-          "url": "https://github.com/TBoonX",
-          "name": "Kurt Junghanns",
-          "company": "Institut für Angewandte Informatik e. V.",
-          "location": "Deutschland",
-          "email": null,
-          "provider": "github"
-        },
-        "oauth": {
-          "token": "6f0103009978a53a88fc7f61277ac03ec31fba5c",
-          "scope": "user"
-        }
-      }
-    },
-    "applications": [{
-      "name": "standard",
-      "authentification": {
-        "timestamp": "Fri Jun 03 2016 13:24:38 GMT+0200 (CEST)",
-        "token": "6f0103009978a53a88fc7f61277ac03ec31fba5c",
-        "expires_in": 7200,
-        "scopes": ["all"]
-      }
-    }]
-  }
-}
-*/

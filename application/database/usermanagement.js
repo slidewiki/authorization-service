@@ -21,6 +21,7 @@ module.exports = {
     return SearchConsumerByProvider(user, provider)
       .then((doc) => {
         if (doc === null) {
+          console.log('no consumer found by _id');
           return AddConsumer(user, authorizationQuery, provider)
             .then((newConsumer) => {
               return newConsumer;

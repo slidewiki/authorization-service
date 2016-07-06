@@ -5,7 +5,7 @@
 
 describe('handler.js', () => {
 
-  let controller, expect, usermanagement, kong;
+  let controller, expect, usermanagement, kong, helper;
 
   const hostname = 'unit_oauth2_test',
     requestHost = 'oauth2test.localhost',
@@ -23,6 +23,7 @@ describe('handler.js', () => {
     kong = require('../controllers/kong');
     controller = require('../controllers/handler');
     usermanagement = require('../database/usermanagement');
+    helper = require('../database/helper');
 
     //create API and upstream host
     return kong.addUpstreamHost(hostname, requestHost, upstreamURL)
@@ -35,7 +36,13 @@ describe('handler.js', () => {
         return kong.initializePluginOAuth2(hostId, undefined)
           .then((plugin) => {
             //console.log('plugin enabled: ', plugin);
-            return;
+
+            return helper.connectToDatabase()
+              .then((dbconn) => dbconn.collection('consumer'))
+              .then((collection) => collection.remove({}))
+              .then((result) => {
+                return;
+              });
           });
       })
       .catch(function (error) {
@@ -77,9 +84,7 @@ describe('handler.js', () => {
     'raw[scope]': 'user',
     'raw[token_type]': 'bearer'
   };
-  const printObject = (data) => {
-    console.log('resolve/response: ', data);
-  };
+  let token = '';
 
   context('creating a user', () => {
     it('should return the new MongoDB Id', () => {
@@ -114,8 +119,48 @@ describe('handler.js', () => {
             expect(result.timestamp).to.not.equal(null);
             expect(result.userid).to.equal('123L564890423454784012A4');
 
+            token = result.token;
+
             done();
           });
+        })
+        .catch((error) => {
+          console.log('error', error);
+          expect(1).to.equal(2);
+        });
+    });
+  });
+
+  context('have an existing consumer', () => {
+    it('with a valid token we should get it', (done) => {
+      return usermanagement.getConsumer(githubUser, query, 'github')
+        .then((consumer) => {
+          expect(consumer).to.not.equal(null);
+          expect(consumer.applications).to.not.equal(undefined);
+          expect(consumer.applications.length).to.not.equal(0);
+          expect(consumer.applications[0]).to.not.equal(undefined);
+          expect(consumer.applications[0].kong).to.not.equal(null);
+          expect(consumer.applications[0].authentification).to.not.equal(null);
+
+          console.log('new consumer: ', consumer);
+
+          expect(consumer.applications[0]).to.not.equal(null);
+
+          return controller.testing_firstPath(consumer, consumer.applications[0], (result) => {
+            console.log('auth', result);
+
+            expect(result).to.not.equal(null);
+            expect(result.userid).to.not.equal(null);
+            expect(result.token).to.equal(token);
+            expect(result.timestamp).to.not.equal(null);
+            expect(result.userid).to.equal('123L564890423454784012A4');
+
+            done();
+          });
+        })
+        .catch((error) => {
+          console.log('error', error);
+          expect(1).to.equal(2);
         });
     });
   });

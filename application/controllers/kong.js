@@ -8,7 +8,7 @@ It has functions to create a costumer and a application and also to retrieve a a
 const request = require('request');
 
 const KONG_ADMIN = 'http://localhost:8001/',
-  KONG_OAUTH2 = 'https://oauth2test.localhost/oauth2/token';
+  KONG_OAUTH2 = 'https://oauth2test.localhost';
 
 module.exports = {
   //returns {"created_at":,"id":""}
@@ -163,10 +163,10 @@ module.exports = {
       });
   },
   //returns {"token_type":"bearer","access_token":"","expires_in":}
-  getAccessToken: (clientId, clientSecret, scope) => {
+  getAccessToken: (clientId, clientSecret, scope, url = KONG_OAUTH2) => {
     let promise = new Promise((resolve, reject) => {
       const options = {
-        url: KONG_OAUTH2,
+        url: url + '/oauth2/token',
         method: 'POST',
         body: 'grant_type=client_credentials&client_id=' + clientId + '&client_secret=' + clientSecret + (scope ? '&scope=' + scope : ''),
         agentOptions: {
