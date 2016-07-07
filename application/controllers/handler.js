@@ -29,6 +29,7 @@ module.exports = {
         return usermanagement.getConsumer(user, req.query, provider)
           .then((consumer) => {
             //simple checks
+            console.log('continueWithToken: we got the consumer and have to check it - ', consumer);
 
             if (consumer === undefined || consumer === null)
               throw Error('unable to get mongodb data');
@@ -44,13 +45,13 @@ module.exports = {
               return false;
             });
 
-            if (standardApplication[0] === null) {
+            if (standardApplication === null || standardApplication === undefined) {
               throw Error('data error: no standard application in consumer');
             }
 
             //first Path: consumer was already there with a Kong configuration - just get the saved token or if the token is invalid get a new one
-            if (standardApplication[0].kong !== null && standardApplication[0].authentification !== null) {
-              return firstPath(consumer, standardApplication[0], res);
+            if (standardApplication.kong !== null && standardApplication.authentification !== null) {
+              return firstPath(consumer, standardApplication, res);
             } //end first path
 
             //second Path: consumer not in the database; have to be created as well as consumer and application in Kong; user have to be created with user service
@@ -59,6 +60,7 @@ module.exports = {
           });
       })
       .catch((error) => {
+        console.log('error', error);
         req.log('error', error);
         res(boom.badImplementation());
       });
