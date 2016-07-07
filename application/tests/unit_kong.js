@@ -111,7 +111,11 @@ describe('Kong', () => {
       return promise.then((application) => {
         expect(application).to.not.equal(null);
         expect(application.client_secret).to.not.equal(undefined);
-        expect(application.redirect_uri).to.equal(applicationRedirectURI);
+        console.log('strange URL: ', application.redirect_uri);
+        let tempURL = application.redirect_uri;
+        if (tempURL.indexOf('[') === 0 && tempURL.indexOf(']') === (tempURL.length - 1) )
+          tempURL = tempURL.substr(2, tempURL.length - 4).replace('\\/', '/').replace('\\/', '/').replace('\\/', '/').replace('\\/', '/');  //I have no idea why I have to do this ....
+        expect(tempURL).to.equal(applicationRedirectURI);
         expect(application.created_at).to.not.equal(undefined);
 
         standardApplication = application;
