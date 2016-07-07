@@ -176,7 +176,7 @@ module.exports = {
 
       function callback(error, response, body) {
         console.log('Kong: getAccessToken: ', options);
-        console.log('Kong: getAccessToken: got ', error, response.statusCode, body);
+        console.log('Kong: getAccessToken: got ', error, (response === undefined) ? undefined : response.statusCode, body);
 
         if (!error && response.statusCode === 200) {
           let authorization = JSON.parse(body);
