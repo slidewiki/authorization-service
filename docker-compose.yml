@@ -1,11 +1,36 @@
-template:
-  image: slidewiki/authorizationservice
-  restart: on-failure:5
-  expose:
-    - "80"
-  external_links:
-    - mongodb
-  environment:
-    - APPLICATION_PORT=80
-    - DATABASE_PORT=27017
-    - VIRTUAL_HOST=microservicetemplate.manfredfris.ch
+version: '2'
+services:
+  service:
+    image: slidewiki/authorizationservice
+    restart: on-failure:5
+    expose:
+      - "80"
+    external_links: #Note: If you’re using the version 2 file format, the externally-created containers must be connected to at least one of the same networks as the service which is linking to them.
+      - mongodb
+    environment:
+      - APPLICATION_PORT=80
+      - DATABASE_PORT=27017
+      - KONG_ADMIN_URL=http://kong:8001/
+      - SELF_URL=https://authorizationservice.manfredfris.ch
+  kong:
+    image: mashape/kong
+    links:
+      - kong-db:kong-database
+      - service:authorizationservice
+    environment:
+      - DATABASE=postgres
+      - VIRTUAL_HOST=authorizationservice.manfredfris.ch
+    ports:
+      - "80:8000"
+      - "443:8443"
+      - "8001:8001"
+      - "7946:7946"
+      - "7946:7946/udp"
+
+  kong-db:
+    image: postgres:9.4
+    environment:
+      - POSTGRES_USER=kong
+      - POSTGRES_DB=kong
+    expose:
+      - "5432"

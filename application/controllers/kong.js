@@ -5,10 +5,11 @@ It has functions to create a costumer and a application and also to retrieve a a
 
 'use strict';
 
-const request = require('request');
+const request = require('request'),
+  URLs = require('../configuration.js').URLS;
 
-const KONG_ADMIN = 'http://localhost:8001/',
-  KONG_OAUTH2 = 'https://oauth2test.localhost';
+const KONG_ADMIN = (URLs.KONG_ADMIN === '') ? 'http://localhost:8001/' : URLs.KONG_ADMIN,
+  KONG_OAUTH2 = (URLs.SELF === '') ? 'https://oauth2test.localhost' : URLs.SELF;
 
 module.exports = {
   //returns {"created_at":,"id":""}

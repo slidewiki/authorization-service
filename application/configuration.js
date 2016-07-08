@@ -15,10 +15,20 @@ for (let i in lines) {
 
 //read mongo port from ENV
 const co = require('./common');
-let port = 27018;
+let port = 27017;
 if (!co.isEmpty(process.env.DATABASE_PORT)){
   port = process.env.DATABASE_PORT;
   //console.log('Using port ' + port + ' as database port.'); TODO replace it with logging, that isn't printed at npm run test:unit
+}
+
+//read URLs from ENV
+let kongURL = '',
+  selfURL = '';
+if (!co.isEmpty(process.env.KONG_ADMIN_URL)){
+  kongURL = process.env.KONG_ADMIN_URL;
+}
+if (!co.isEmpty(process.env.SELF_URL)){
+  selfURL = process.env.SELF_URL;
 }
 
 module.exports = {
@@ -27,5 +37,9 @@ module.exports = {
     HOST: host,
     NS: 'local',
     SLIDEWIKIDATABASE: 'slidewikiauthorization'
+  },
+  URLS: {
+    KONG_ADMIN: kongURL,
+    SELF: selfURL
   }
 };
