@@ -1,7 +1,7 @@
 version: '2'
 services:
   service:
-    image: slidewiki/authorizationservice
+    image: slidewiki/authorizationservice:latest-dev
     restart: on-failure:5
     expose:
       - "80"
